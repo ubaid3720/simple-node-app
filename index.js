@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/users", (req, res) => {
+app.get("/user", (req, res) => {
   res.json([
     {
       name: "Adeel Solangi",
