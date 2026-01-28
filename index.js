@@ -14,6 +14,14 @@ app.get("/", (req, res) => {
     status: "success",
     message: "Welcome to the our API server!",
   });
+}); 
+
+
+app.get('/info', (req, res) => {
+  res.json({
+    app: "Simple Node App",
+    version: "1.0.0", 
+  });
 });
 
 app.get("/users", (req, res) => {
