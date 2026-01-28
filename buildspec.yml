@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Getting AWS Account ID"
+      - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - echo "Login to Amazon ECR"
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com
+      - REPO=$AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/node-app-repo
+
+  build:
+    commands:
+      - echo "Build Docker image"
+      - docker build -t $REPO:latest .
+      - docker push $REPO:latest
+
+  post_build:
+    commands:
+      - echo "Create imagedefinitions.json"
+      - printf '[{"name":"node-app","imageUri":"%s"}]' $REPO:latest > imagedefinitions.json
+
+artifacts:
+  files:
+    - imagedefinitions.json
